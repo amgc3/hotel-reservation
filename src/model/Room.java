@@ -4,10 +4,10 @@ import java.util.Objects;
 
 public class Room implements  IRoom {
 
-    String roomNumber;
-    Double price;
-    RoomType roomType;
-    boolean isFree;
+    private String roomNumber;
+    private Double price;
+    private RoomType roomType;
+    private boolean isFree; // not sure I should have this
 
     public Room(String roomNumber, Double price, RoomType roomType) {
         this.roomNumber = roomNumber;
@@ -42,6 +42,7 @@ public class Room implements  IRoom {
                 "roomNumber='" + roomNumber + '\'' +
                 ", price=" + price +
                 ", roomType=" + roomType +
+                ", isFree=" + isFree() +
                 '}';
     }
 

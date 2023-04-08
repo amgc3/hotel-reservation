@@ -1,12 +1,11 @@
 package model;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class Reservation {
     Customer customer;
     IRoom room;
-    Date checkInDate; // is this Java 15? should I change the below?
+    Date checkInDate;
     Date checkOutDate;
 
     public Reservation(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {

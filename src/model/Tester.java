@@ -18,7 +18,7 @@ public class Tester {
 
         //how do I differentiate betwen a free room and one that is occupied?
         Room room = new Room("101", 75.0, RoomType.DOUBLE);
-        room.isFree = false;
+        //FreeRoom freeRoom = new FreeRoom("222", RoomType.SINGLE)
         FreeRoom freeRoom = new FreeRoom("105", RoomType.DOUBLE);
 
 
@@ -26,7 +26,6 @@ public class Tester {
         System.out.println(customer);
 
         Reservation reservation = new Reservation(customer, freeRoom, checkIn, checkOut);
-        freeRoom.isFree = false;
 
         //Customer customer1 = new Customer("first", "second", "email");
         System.out.println(room);

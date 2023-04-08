@@ -9,10 +9,10 @@ public class FreeRoom extends Room {
     @Override
     public String toString() {
         return "FreeRoom{" +
-                "roomNumber='" + roomNumber + '\'' +
-                ", price=" + price +
-                ", roomType=" + roomType +
-                ", isFree=" + isFree +
+                "roomNumber='" + getRoomNumber() + '\'' +
+                ", price=" + getRoomPrice() +
+                ", roomType=" + getRoomType() +
+                ", isFree=" + isFree() +
                 '}';
     }
 }

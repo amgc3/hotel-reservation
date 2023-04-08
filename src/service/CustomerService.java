@@ -3,18 +3,17 @@ package service;
 import model.Customer;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CustomerService {
-//    HashMap<String, String[]> customerTable = new HashMap<>();
-    private List<Customer> customerList;
+    private Map<String, Customer> customerMap;
 //provide a static reference
     private static CustomerService instance = new CustomerService();
 
     private CustomerService() {
-        this.customerList = new ArrayList<>();
+        this.customerMap = new HashMap<>();
     }
 
     public CustomerService getInstance() {
@@ -22,21 +21,22 @@ public class CustomerService {
     }
 
     public void addCustomer(String email, String firstName, String lastName) {
+        Customer customer = new Customer(firstName, lastName, email);
+        customerMap.put(customer.getEmail(), customer);
 
     }
     // do I use Collection<Customer> as in description?
     public List<Customer> getAllCustomers() {
-        return this.customerList;
+        List<Customer> customerList = new ArrayList<>();
+        for (Customer customer : customerMap.values()) {
+            customerList.add(customer);
+        }
+        return customerList;
 
     }
 
     public Customer getCustomer(String customerEmail) {
-        for (Customer customer : customerList) {
-            if (customer.getEmail().equals(customerEmail)) {
-                return customer;
-            }
-        }
-        return null;
+        return customerMap.get(customerEmail);
     }
 
 

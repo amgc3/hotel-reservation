@@ -3,17 +3,16 @@ package service;
 import model.Customer;
 import model.IRoom;
 import model.Reservation;
-import model.Room;
 
 import java.util.*;
 
 public class ReservationServiceClass {
 
     private static ReservationServiceClass instance = new ReservationServiceClass();
-    private Map<Integer, IRoom> hotelRooms;
+    private Map<String, IRoom> hotelRooms;
 
     private ReservationServiceClass() {
-        this.hotelRooms = new HashMap<>();
+        this.hotelRooms = new HashMap<String, IRoom>();
     }
 
     public static ReservationServiceClass getInstance() {
@@ -21,13 +20,15 @@ public class ReservationServiceClass {
     }
 
     public void addRoom(IRoom room) {
-        //hotelRooms.add(room);
+        hotelRooms.put(room.getRoomNumber(), room);
     }
 
     public IRoom getARoom(String roomId) {
+        if (hotelRooms.get(roomId) == null) {
+            throw new IllegalArgumentException("Invalid room number ");
+        }
 
-        return hotelRooms.
-        return null; // should I use optional?
+        return hotelRooms.get(roomId);
     }
 
     public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
