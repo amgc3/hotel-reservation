@@ -9,14 +9,14 @@ import java.util.Map;
 
 public class CustomerService {
     private Map<String, Customer> customerMap;
-//provide a static reference
+
     private static CustomerService instance = new CustomerService();
 
     private CustomerService() {
         this.customerMap = new HashMap<>();
     }
 
-    public CustomerService getInstance() {
+    public static CustomerService getInstance() {
         return instance;
     }
 
@@ -25,7 +25,11 @@ public class CustomerService {
         customerMap.put(customer.getEmail(), customer);
 
     }
-    // do I use Collection<Customer> as in description?
+
+    public Customer getCustomer(String customerEmail) {
+        return customerMap.get(customerEmail);
+    }
+
     public List<Customer> getAllCustomers() {
         List<Customer> customerList = new ArrayList<>();
         for (Customer customer : customerMap.values()) {
@@ -33,10 +37,6 @@ public class CustomerService {
         }
         return customerList;
 
-    }
-
-    public Customer getCustomer(String customerEmail) {
-        return customerMap.get(customerEmail);
     }
 
 
