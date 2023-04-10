@@ -36,6 +36,7 @@ public class Reservation {
         return "Reservation{" +
                 "customer=" + customer +
                 ", room=" + room +
+                ", checkInDate=" + checkInDate +
                 ", checkOutDate=" + checkOutDate +
                 '}';
     }
