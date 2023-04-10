@@ -16,7 +16,6 @@ public class Tester {
         calendar.set(Calendar.DAY_OF_MONTH, 14);
         Date checkOut = calendar.getTime();
 
-        //how do I differentiate betwen a free room and one that is occupied?
         Room room = new Room("101", 75.0, RoomType.DOUBLE);
         //FreeRoom freeRoom = new FreeRoom("222", RoomType.SINGLE)
         FreeRoom freeRoom = new FreeRoom("105", RoomType.DOUBLE);

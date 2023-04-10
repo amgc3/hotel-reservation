@@ -1,19 +1,15 @@
 package model;
 
-import java.util.Objects;
-
 public class Room implements  IRoom {
 
-    private String roomNumber;
+    private final String roomNumber;
     private Double price;
     private RoomType roomType;
-    private boolean isFree; // not sure I should have this
 
     public Room(String roomNumber, Double price, RoomType roomType) {
         this.roomNumber = roomNumber;
         this.price = price;
         this.roomType = roomType;
-        this.isFree = true;
     }
 
     @Override
@@ -26,6 +22,10 @@ public class Room implements  IRoom {
         return price;
     }
 
+    public void setRoomPrice(Double price) {
+        this.price = price;
+    }
+
     @Override
     public RoomType getRoomType() {
         return roomType;
@@ -33,7 +33,7 @@ public class Room implements  IRoom {
 
     @Override
     public boolean isFree() {
-        return isFree;
+        return this.getRoomPrice() == 0.0;
     }
 
     @Override
@@ -42,7 +42,6 @@ public class Room implements  IRoom {
                 "roomNumber='" + roomNumber + '\'' +
                 ", price=" + price +
                 ", roomType=" + roomType +
-                ", isFree=" + isFree() +
                 '}';
     }
 
@@ -50,12 +49,19 @@ public class Room implements  IRoom {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Room room = (Room) o;
-        return isFree() == room.isFree() && getRoomNumber().equals(room.getRoomNumber()) && price.equals(room.price) && getRoomType() == room.getRoomType();
+
+        if (!getRoomNumber().equals(room.getRoomNumber())) return false;
+        if (!getRoomPrice().equals(room.getRoomPrice())) return false;
+        return getRoomType() == room.getRoomType();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRoomNumber(), price, getRoomType(), isFree());
+        int result = getRoomNumber().hashCode();
+        result = 31 * result + getRoomPrice().hashCode();
+        result = 31 * result + getRoomType().hashCode();
+        return result;
     }
 }

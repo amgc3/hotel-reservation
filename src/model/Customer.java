@@ -3,8 +3,8 @@ package model;
 import java.util.regex.Pattern;
 
 public class Customer {
-    private String firstName;
-    private String lastName;
+    private final String firstName;
+    private final String lastName;
     private String email;
     private final String emailRegex = "^(.+)@(.+).com";
     private final Pattern pattern = Pattern.compile(emailRegex);
@@ -16,10 +16,6 @@ public class Customer {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-
-        //add regex to validate the email. if email does not match
-        //name@domain.com throw IllegalArgumentException
-        //RegExr.com.
     }
 
     public String getFirstName() {
