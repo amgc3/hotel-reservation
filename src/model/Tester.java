@@ -1,5 +1,7 @@
 package model;
 
+import service.ReservationService;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,7 +26,9 @@ public class Tester {
         Customer customer = new Customer("first", "second", "J@domain.com");
         System.out.println(customer);
 
-        Reservation reservation = new Reservation(customer, freeRoom, checkIn, checkOut);
+        Reservation reservation = new Reservation(customer, room, checkIn, checkOut);
+        System.out.println(ReservationService.getInstance().getCustomersReservation(customer));
+
 
         //Customer customer1 = new Customer("first", "second", "email");
         System.out.println(room);
