@@ -2,15 +2,14 @@ package service;
 
 import model.Customer;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CustomerService {
     private Map<String, Customer> customerMap;
 
-    private static CustomerService instance = new CustomerService();
+    private static final CustomerService instance = new CustomerService();
 
     private CustomerService() {
         this.customerMap = new HashMap<>();
@@ -30,12 +29,8 @@ public class CustomerService {
         return customerMap.get(customerEmail);
     }
 
-    public List<Customer> getAllCustomers() {
-        List<Customer> customerList = new ArrayList<>();
-        for (Customer customer : customerMap.values()) {
-            customerList.add(customer);
-        }
-        return customerList;
+    public Collection<Customer> getAllCustomers() {
+        return customerMap.values();
 
     }
 
