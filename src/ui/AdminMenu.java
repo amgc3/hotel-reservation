@@ -4,16 +4,13 @@ import api.AdminResource;
 import model.IRoom;
 import model.Room;
 import model.RoomType;
-import service.CustomerService;
-import service.ReservationService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class AdminMenu {
-    static ReservationService reservationService = ReservationService.getInstance();
-    static CustomerService customerService = CustomerService.getInstance();
+    static AdminResource adminResource = AdminResource.getInstance();
 
     public static void adminFunctions() {
         boolean changeMenu = false;
@@ -26,8 +23,7 @@ public class AdminMenu {
                 case 2 -> seeAllRooms();
                 case 3 -> seeAllReservations();
                 case 4 -> addARoom(); // add as many as you want
-                case 5 -> System.out.println("5. Add Test Data");
-                case 6 -> changeMenu = true; //MainMenu.printMenuAndGetSelection();
+                case 5 -> changeMenu = true; //MainMenu.printMenuAndGetSelection();
             }
 
         } while (!changeMenu);
@@ -90,7 +86,7 @@ public class AdminMenu {
                 response = input.nextLine().toLowerCase();
             }
             if (response.equals("n")) {
-                AdminResource.getInstance().addRoom(roomList);
+                adminResource.addRoom(roomList);
                 break;
             }
 
@@ -100,16 +96,16 @@ public class AdminMenu {
     }
 
     public static void seeAllRooms() {
-        reservationService.getHotelRooms().values().forEach(room -> System.out.println(room));
+        adminResource.getAllRooms().forEach(room -> System.out.println(room));
 
     }
 
     private static void seeAllReservations() {
-        reservationService.printAllReservation();
+        adminResource.displayAllReservations();
     }
 
     private static void seeAllCustomers() {
-        customerService.getAllCustomers()
+        adminResource.getAllCustomers()
                 .forEach(customer -> System.out.println(customer));
     }
 }
