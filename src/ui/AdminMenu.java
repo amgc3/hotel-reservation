@@ -8,12 +8,12 @@ import service.CustomerService;
 import service.ReservationService;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
 public class AdminMenu {
     static ReservationService reservationService = ReservationService.getInstance();
+    static CustomerService customerService = CustomerService.getInstance();
 
     public static void adminFunctions() {
         boolean changeMenu = false;
@@ -22,15 +22,12 @@ public class AdminMenu {
         int selection = printAdminMenuAndGetSelection();
 
             switch (selection) {
-                case 1 -> CustomerService.getInstance().getAllCustomers();
+                case 1 -> seeAllCustomers();
                 case 2 -> seeAllRooms();
-                case 3 -> ReservationService.getInstance().printAllReservation();
-                case 4 -> addARoom(); /// add a room
+                case 3 -> seeAllReservations();
+                case 4 -> addARoom(); // add as many as you want
                 case 5 -> System.out.println("5. Add Test Data");
-                case 6 -> {
-                    changeMenu = true;
-                    MainMenu.printMenuAndGetSelection();
-                }
+                case 6 -> changeMenu = true; //MainMenu.printMenuAndGetSelection();
             }
 
         } while (!changeMenu);
@@ -102,8 +99,17 @@ public class AdminMenu {
 
     }
 
-    public static Collection<IRoom> seeAllRooms() {
-        return reservationService.getHotelRooms().values();
+    public static void seeAllRooms() {
+        reservationService.getHotelRooms().values().forEach(room -> System.out.println(room));
 
+    }
+
+    private static void seeAllReservations() {
+        reservationService.printAllReservation();
+    }
+
+    private static void seeAllCustomers() {
+        customerService.getAllCustomers()
+                .forEach(customer -> System.out.println(customer));
     }
 }
