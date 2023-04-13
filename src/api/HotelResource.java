@@ -33,7 +33,7 @@ public class HotelResource {
 
     }
     public Reservation bookARoom(String customerEmail, IRoom room, Date checkInDate, Date checkOutDate) {
-        Customer customer = customerService.getCustomer(customerEmail);
+        Customer customer = getCustomer(customerEmail);
         return reservationService.reserveARoom(customer, room, checkInDate, checkOutDate);
 
     }
