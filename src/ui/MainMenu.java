@@ -1,5 +1,6 @@
 package ui;
 
+import api.AdminResource;
 import api.HotelResource;
 import model.IRoom;
 import model.Reservation;
@@ -8,11 +9,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class MainMenu {
 
     static HotelResource hotelResource = HotelResource.getInstance();
+    static AdminResource adminResource = AdminResource.getInstance();
 
 
     public static int printMenuAndGetSelection() {
@@ -77,6 +81,17 @@ public class MainMenu {
         final Scanner input = new Scanner(System.in);
         System.out.println("Please enter your email");
         String email = input.nextLine();
+
+        // if email does not belong to any customer, stop here
+        final List<String> emailList = adminResource
+                .getAllCustomers()
+                .stream()
+                .map(customer -> customer.getEmail())
+                .collect(Collectors.toList());
+        if (!emailList.contains(email)) {
+            System.out.println("Invalid email address");
+            return;
+        }
 
         System.out.println("Please enter checkin date as dd-mm-yyyy");
         String begin = input.nextLine();
