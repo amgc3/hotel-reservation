@@ -1,15 +1,22 @@
 package ui;
 
-import service.CustomerService;
+import api.HotelResource;
+import model.IRoom;
+import model.Reservation;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
 import java.util.Scanner;
 
 public class MainMenu {
 
-       static CustomerService customerService = CustomerService.getInstance();
+    static HotelResource hotelResource = HotelResource.getInstance();
 
 
     public static int printMenuAndGetSelection() {
+        System.out.println();
         System.out.println("Main Menu");
         System.out.println("-------------------------------");
         System.out.println("1. Find and reserve a room");
@@ -30,7 +37,7 @@ public class MainMenu {
 
 
         while (true) {
-            try{
+            try {
 
                 num = Integer.parseInt(input.nextLine());
                 break;
@@ -48,23 +55,85 @@ public class MainMenu {
         System.out.println("Please enter your last name");
         String surname = input.nextLine();
         System.out.println("Please enter your email in name@domain.com format: ");
+        String email;
+        boolean invalidEmail = true;
+        while (invalidEmail) {
+            try {
+                email = input.nextLine();
+                hotelResource.createACustomer(email, name, surname);
+                System.out.println("Account Created!");
+                System.out.println(hotelResource.getCustomer(email));
+                invalidEmail = false;
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid email address");
+                System.out.println("Please enter your email in name@domain.com format: ");
+            }
+        }
+
+    }
+
+    public static void findAndReserveARoom() {
+        final Scanner input = new Scanner(System.in);
+        System.out.println("Please enter your email");
         String email = input.nextLine();
+
+        System.out.println("Please enter checkin date as dd-mm-yyyy");
+        String begin = input.nextLine();
+        Date date1 = null;
         try {
-            customerService.addCustomer(email, name, surname);
+            date1 = new SimpleDateFormat("dd-MM-yyyy").parse(begin);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println(date1);
+        System.out.println("Please enter checkout date");
+        String end = input.nextLine();
+        Date date2 = null;
+        try {
+            date2 = new SimpleDateFormat("dd-MM-yyyy").parse(end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println(date2);
 
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid email address");
-            System.out.println("Please enter your email in name@domain.com format: ");
-            email = input.nextLine();
-            customerService.addCustomer(email, name, surname);
-        } finally {
+        System.out.println("-------------------------------------------------");
 
-            System.out.println("Account Created!");
+        Collection<IRoom> roomsFound = hotelResource.findARoom(date1, date2);
+        roomsFound.forEach(System.out::println);
+
+        System.out.println("-------------------------------------------------");
+        System.out.println("Please select a room number");
+        String roomNumber = input.nextLine();
+        IRoom room = hotelResource.getRoom(roomNumber);
+
+        hotelResource.bookARoom(email, room, date1, date2);
+        System.out.println("Room " + roomNumber + " has been booked");
+
+    }
+
+    public static void seeMyReservations() {
+        final Scanner input = new Scanner(System.in);
+        System.out.println("Please enter your email:");
+        Collection<Reservation> reservations;
+        try{
+            String email = input.nextLine();
+            reservations = hotelResource.getCustomersReservations(email);
+
+            } catch (NullPointerException e) {
+                System.out.println("Email address given does not exist");
+                return;
+            }
+        if (reservations != null) {
+
+            reservations.forEach(reservation -> System.out.println(reservation));
+
+        } else {
+            System.out.println("You have no reservations");
+        }
+
         }
 
 
-        System.out.println(customerService.getAllCustomers());
-    }
-
-
 }
+
