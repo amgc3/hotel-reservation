@@ -64,18 +64,25 @@ public class ReservationService {
 
             List<IRoom> collect1 = allReservations
                     .stream()
-                    .filter(res -> res.getCheckOutDate().before(checkInDate))
+                    .filter(res -> (!res.getCheckOutDate().before(checkOutDate) && !res.getCheckOutDate().after(checkInDate)))
+                    .filter(res -> (!res.getCheckInDate().after(checkInDate) && !res.getCheckInDate().before(checkOutDate)) )
                     .map(reservation -> reservation.getRoom())
                     .collect(Collectors.toList());
 
-            List<IRoom> collect2 = allReservations
+
+            Set<IRoom> reservedRooms = allReservations
                     .stream()
-                    .filter((res -> res.getCheckInDate().after(checkOutDate)))
                     .map(reservation -> reservation.getRoom())
-                    .collect(Collectors.toList());
-            collect1.addAll(collect2);
+                    .collect(Collectors.toSet());
 
-            return collect1; // need to make sure also rooms that are not booked are also included
+            List<IRoom> roomsWithoutReservation = hotelRooms.values()
+                    .stream()
+                    .filter(room -> !reservedRooms.contains(room))
+                    .collect(Collectors.toList());
+
+            collect1.addAll(roomsWithoutReservation);
+
+            return new HashSet<>(collect1); // I don't think I need this now, probably can return collect1
         }
     }
 
