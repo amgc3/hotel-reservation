@@ -23,22 +23,20 @@ public class AdminMenu {
                 case 2 -> seeAllRooms();
                 case 3 -> seeAllReservations();
                 case 4 -> addARoom(); // add as many as you want
-                case 5 -> changeMenu = true; //MainMenu.printMenuAndGetSelection();
+                case 5 -> changeMenu = true;
             }
 
         } while (!changeMenu);
     }
 
-
     public static int printAdminMenuAndGetSelection() {
         System.out.println("Admin Menu");
         System.out.println("-------------------------------");
         System.out.println("1. See all Customers");
-        System.out.println("2. See all Rooms"); //reservationService.getAllRooms()
+        System.out.println("2. See all Rooms");
         System.out.println("3. See all Reservations");
         System.out.println("4. Add a Room");
-        System.out.println("5. Add Test Data");
-        System.out.println("6. Back to Main Menu");
+        System.out.println("5. Back to Main Menu");
         System.out.println("-------------------------------");
 
         return readInt("Please select a number from the above choices");
@@ -80,18 +78,21 @@ public class AdminMenu {
 
             System.out.println("Would you like to add another room? y/n");
             String response = input.nextLine().toLowerCase();
-            boolean validInput = response.equals("y") || response.equals("n");
-            while (!validInput) {
-                System.out.println("Please enter y/n");
-                response = input.nextLine().toLowerCase();
-            }
-            if (response.equals("n")) {
-                adminResource.addRoom(roomList);
-                break;
+            //boolean validInput = response.equals("y") || response.equals("n");
+            while (true) {
+                if (response.equals("y")) {
+                    break;
+                } else if (response.equals("n")) {
+                    adminResource.addRoom(roomList);
+                    return;
+                } else {
+                    System.out.println("Please enter y/n");
+                    response = input.nextLine().toLowerCase();
+
+                }
             }
 
         }
-        //System.out.println(roomList);
 
     }
 
