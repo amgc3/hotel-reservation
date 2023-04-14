@@ -64,8 +64,8 @@ public class ReservationService {
 
             List<IRoom> collect1 = allReservations
                     .stream()
-                    .filter(res -> (!res.getCheckOutDate().before(checkOutDate) && !res.getCheckOutDate().after(checkInDate)))
-                    .filter(res -> (!res.getCheckInDate().after(checkInDate) && !res.getCheckInDate().before(checkOutDate)) )
+                    .filter(res -> (res.getCheckOutDate().before(checkOutDate) && !res.getCheckOutDate().after(checkInDate)))
+                    .filter(res -> (res.getCheckInDate().after(checkInDate) && !res.getCheckInDate().before(checkOutDate)) )
                     .map(reservation -> reservation.getRoom())
                     .collect(Collectors.toList());
 
@@ -81,7 +81,6 @@ public class ReservationService {
                     .collect(Collectors.toList());
 
             collect1.addAll(roomsWithoutReservation);
-
             return new HashSet<>(collect1); // I don't think I need this now, probably can return collect1
         }
     }
