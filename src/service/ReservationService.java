@@ -74,6 +74,7 @@ public class ReservationService {
                     .map(reservation -> reservation.getRoom())
                     .collect(Collectors.toSet());
 
+            // at the beginning we have rooms that have never been reserved
             List<IRoom> roomsWithoutReservation = hotelRooms.values()
                     .stream()
                     .filter(room -> !reservedRooms.contains(room))
@@ -84,6 +85,7 @@ public class ReservationService {
         }
     }
 
+    // assumption: a customer can check out of a room and another can check in the same day
     public static boolean areDatesOverlapping(Date resCheckIn, Date resCheckOut, Date checkInDate, Date checkOutDate) {
         return resCheckIn.after(checkInDate) && resCheckIn.before(checkOutDate)
                 || resCheckOut.after(checkInDate) && resCheckOut.before(checkOutDate);
