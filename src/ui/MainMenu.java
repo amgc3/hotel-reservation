@@ -7,10 +7,7 @@ import model.Reservation;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MainMenu {
@@ -94,27 +91,42 @@ public class MainMenu {
         }
 
         System.out.println("Please enter checkin date as dd-mm-yyyy");
-        String begin = input.nextLine();
-        Date date1 = null;
-        try {
-            date1 = new SimpleDateFormat("dd-MM-yyyy").parse(begin);
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+        Date date1;
+        while (true) {
+            String begin = input.nextLine();
+            try {
+                date1 = new SimpleDateFormat("dd-MM-yyyy").parse(begin);
+                break;
+            } catch (ParseException e) {
+                System.out.println("Invalid date please enter date as dd-mm-yyyy");
+            }
+
         }
-        System.out.println(date1);
+
         System.out.println("Please enter checkout date");
-        String end = input.nextLine();
-        Date date2 = null;
-        try {
-            date2 = new SimpleDateFormat("dd-MM-yyyy").parse(end);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        Date date2;
+
+        while (true) {
+            String end = input.nextLine();
+            try {
+                date2 = new SimpleDateFormat("dd-MM-yyyy").parse(end);
+                break;
+            } catch (ParseException e) {
+                System.out.println("Invalid date please enter date as dd-mm-yyyy");
+            }
+
         }
-        System.out.println(date2);
+
 
         System.out.println("-------------------------------------------------");
 
         Collection<IRoom> roomsFound = hotelResource.findARoom(date1, date2);
+        // need to handle if roomsFund is empty
+        if (roomsFound.isEmpty()) {
+            roomsFound = getRoomsWithAlternativeDates(date1, date2);
+
+        }
         roomsFound.forEach(System.out::println);
 
         System.out.println("-------------------------------------------------");
@@ -124,7 +136,23 @@ public class MainMenu {
 
         hotelResource.bookARoom(email, room, date1, date2);
         System.out.println("Room " + roomNumber + " has been booked");
+        System.out.println();
 
+    }
+
+    private static Collection<IRoom> getRoomsWithAlternativeDates(Date date1, Date date2) {
+        Collection<IRoom> roomsFound;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date1);
+        calendar.add(Calendar.DAY_OF_MONTH, 7);
+        Date newCheckIn = calendar.getTime();
+        calendar.setTime(date2);
+        calendar.add(Calendar.DAY_OF_MONTH, 7);
+        Date newCheckOut = calendar.getTime();
+        roomsFound = hotelResource.findARoom(newCheckIn, newCheckOut);
+        System.out.println("There were no rooms available for your dates");
+        System.out.println("We have searched for alternative checkin on " + newCheckIn + " and checkout on " + newCheckOut );
+        return roomsFound;
     }
 
     public static void seeMyReservations() {
