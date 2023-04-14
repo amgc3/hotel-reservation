@@ -64,8 +64,7 @@ public class ReservationService {
 
             List<IRoom> collect1 = allReservations
                     .stream()
-                    .filter(res -> (res.getCheckOutDate().before(checkOutDate) && !res.getCheckOutDate().after(checkInDate)))
-                    .filter(res -> (res.getCheckInDate().after(checkInDate) && !res.getCheckInDate().before(checkOutDate)) )
+                    .filter(res -> !areDatesOverlapping(res.getCheckInDate(), res.getCheckOutDate(), checkInDate, checkOutDate))
                     .map(reservation -> reservation.getRoom())
                     .collect(Collectors.toList());
 
@@ -83,6 +82,11 @@ public class ReservationService {
             collect1.addAll(roomsWithoutReservation);
             return new HashSet<>(collect1); // I don't think I need this now, probably can return collect1
         }
+    }
+
+    public static boolean areDatesOverlapping(Date resCheckIn, Date resCheckOut, Date checkInDate, Date checkOutDate) {
+        return resCheckIn.after(checkInDate) && resCheckIn.before(checkOutDate)
+                || resCheckOut.after(checkInDate) && resCheckOut.before(checkOutDate);
     }
 
     public Collection<Reservation> getCustomersReservation(Customer customer) {
