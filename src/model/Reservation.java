@@ -40,4 +40,26 @@ public class Reservation {
                 ", checkOutDate=" + checkOutDate +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Reservation that = (Reservation) o;
+
+        if (!getCustomer().equals(that.getCustomer())) return false;
+        if (!getRoom().equals(that.getRoom())) return false;
+        if (!getCheckInDate().equals(that.getCheckInDate())) return false;
+        return getCheckOutDate().equals(that.getCheckOutDate());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getCustomer().hashCode();
+        result = 31 * result + getRoom().hashCode();
+        result = 31 * result + getCheckInDate().hashCode();
+        result = 31 * result + getCheckOutDate().hashCode();
+        return result;
+    }
 }
