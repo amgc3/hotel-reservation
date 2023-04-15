@@ -7,8 +7,10 @@ import model.Reservation;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Scanner;
 
 public class MainMenu {
 
@@ -79,7 +81,13 @@ public class MainMenu {
         System.out.println("Please enter your email");
         String email = input.nextLine();
 
-        // if email does not belong to any customer, stop here
+        if (adminResource.getCustomer(email) == null) {
+            System.out.println("Invalid email address");
+            return;
+        }
+
+/*
+ if I could not use the getCustomer above
         final List<String> emailList = adminResource
                 .getAllCustomers()
                 .stream()
@@ -89,6 +97,7 @@ public class MainMenu {
             System.out.println("Invalid email address");
             return;
         }
+*/
 
         System.out.println("Please enter check-in date as dd-mm-yyyy");
 
@@ -122,10 +131,15 @@ public class MainMenu {
         System.out.println("-------------------------------------------------");
 
         Collection<IRoom> roomsFound = hotelResource.findARoom(date1, date2);
-        // need to handle if roomsFund is empty
+        // search for alternatives
         if (roomsFound.isEmpty()) {
             roomsFound = getRoomsWithAlternativeDates(date1, date2);
 
+        }
+        // no alternatives were found
+        if (roomsFound.isEmpty()) {
+            System.out.println("No alternatives were found");
+            return;
         }
         roomsFound.forEach(System.out::println);
 
