@@ -90,7 +90,7 @@ public class MainMenu {
             return;
         }
 
-        System.out.println("Please enter checkin date as dd-mm-yyyy");
+        System.out.println("Please enter check-in date as dd-mm-yyyy");
 
         Date date1;
         while (true) {
@@ -104,7 +104,7 @@ public class MainMenu {
 
         }
 
-        System.out.println("Please enter checkout date");
+        System.out.println("Please enter check-out date");
         Date date2;
 
         while (true) {
@@ -130,8 +130,9 @@ public class MainMenu {
         roomsFound.forEach(System.out::println);
 
         System.out.println("-------------------------------------------------");
-        System.out.println("Please select a room number");
+        System.out.println("Please select a room number or 0 to exit");
         String roomNumber = input.nextLine();
+        if (roomNumber.equals("0")) return;
         IRoom room = hotelResource.getRoom(roomNumber);
 
         hotelResource.bookARoom(email, room, date1, date2);
@@ -151,7 +152,7 @@ public class MainMenu {
         Date newCheckOut = calendar.getTime();
         roomsFound = hotelResource.findARoom(newCheckIn, newCheckOut);
         System.out.println("There were no rooms available for your dates");
-        System.out.println("We have searched for alternative checkin on " + newCheckIn + " and checkout on " + newCheckOut );
+        System.out.println("We have searched for alternative check-in on " + newCheckIn + " and check-out on " + newCheckOut );
         return roomsFound;
     }
 

@@ -78,7 +78,6 @@ public class AdminMenu {
 
             System.out.println("Would you like to add another room? y/n");
             String response = input.nextLine().toLowerCase();
-            //boolean validInput = response.equals("y") || response.equals("n");
             while (true) {
                 if (response.equals("y")) {
                     break;
