@@ -45,7 +45,7 @@ public class AdminResource {
 
     public Collection<IRoom> getAllRooms() {
         // return the collection of rooms
-        return reservationService.getHotelRooms().values();
+        return reservationService.getHotelRooms();
 
     }
 

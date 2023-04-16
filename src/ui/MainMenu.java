@@ -147,7 +147,13 @@ public class MainMenu {
         System.out.println("Please select a room number or 0 to exit");
         String roomNumber = input.nextLine();
         if (roomNumber.equals("0")) return;
-        IRoom room = hotelResource.getRoom(roomNumber);
+        IRoom room;
+        try {
+            room = hotelResource.getRoom(roomNumber);
+        } catch (IllegalArgumentException e) {
+            System.out.println("You selected an invalid room number");
+            return;
+        }
 
         hotelResource.bookARoom(email, room, date1, date2);
         System.out.println("Room " + roomNumber + " has been booked");

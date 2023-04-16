@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 public class ReservationService {
 
     private final static ReservationService instance = new ReservationService();
-    private Map<String, IRoom> hotelRooms;
+    private Set<IRoom> hotelRooms;
     private Map<String, List<Reservation>> reservations;
 
     private ReservationService() {
-        hotelRooms = new HashMap<>();
+        hotelRooms = new HashSet<>();
         reservations = new HashMap<>();
     }
 
@@ -22,20 +22,20 @@ public class ReservationService {
         return instance;
     }
 
-    public Map<String, IRoom> getHotelRooms() {
+    public Set<IRoom> getHotelRooms() {
         return hotelRooms;
     }
 
     public void addRoom(IRoom room) {
-        hotelRooms.put(room.getRoomNumber(), room);
+        hotelRooms.add(room);
     }
 
     public IRoom getARoom(String roomId) {
-        if (hotelRooms.get(roomId) == null) {
-            throw new IllegalArgumentException("Invalid room number ");
-        }
+        return hotelRooms.stream()
+                .filter(r-> r.getRoomNumber().equals(roomId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid room number"));
 
-        return hotelRooms.get(roomId);
     }
 
     public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
@@ -59,17 +59,17 @@ public class ReservationService {
         }
 
         if (allReservations.isEmpty()) {
-            return hotelRooms.values()
+            return hotelRooms
                     .stream()
                     .filter(room -> !room.isFree())
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
         } else {
 
-            List<IRoom> collect1 = allReservations
+            Set<IRoom> collect1 = allReservations
                     .stream()
                     .filter(res -> !areDatesOverlapping(res.getCheckInDate(), res.getCheckOutDate(), checkInDate, checkOutDate))
                     .map(reservation -> reservation.getRoom())
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
 
 
             Set<IRoom> reservedRooms = allReservations
@@ -78,13 +78,13 @@ public class ReservationService {
                     .collect(Collectors.toSet());
 
             // at the beginning we have rooms that have never been reserved
-            List<IRoom> roomsWithoutReservation = hotelRooms.values()
+            Set<IRoom> roomsWithoutReservation = hotelRooms
                     .stream()
                     .filter(room -> !reservedRooms.contains(room))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
 
             collect1.addAll(roomsWithoutReservation);
-            return new HashSet<>(collect1); // I don't think I need this now, probably can return collect1
+            return collect1; // I don't think I need this now, probably can return collect1
         }
     }
 
