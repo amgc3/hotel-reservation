@@ -59,7 +59,10 @@ public class ReservationService {
         }
 
         if (allReservations.isEmpty()) {
-            return hotelRooms.values();
+            return hotelRooms.values()
+                    .stream()
+                    .filter(room -> !room.isFree())
+                    .collect(Collectors.toList());
         } else {
 
             List<IRoom> collect1 = allReservations

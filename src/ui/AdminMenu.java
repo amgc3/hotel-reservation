@@ -69,6 +69,11 @@ public class AdminMenu {
 
             System.out.println("Enter Room Number: ");
             String roomNumber = input.nextLine();
+            if (!isNumber(roomNumber)) {
+                System.out.println("Input error. That is not a valid number");
+                System.out.println();
+                return;
+            }
             System.out.println("Enter Price per Night: ");
             Double price = Double.parseDouble(input.nextLine());
             System.out.println("Enter Room Type: 1 for Single, 2 for Double");
@@ -93,6 +98,15 @@ public class AdminMenu {
 
         }
 
+    }
+
+    static boolean isNumber(String s)
+    {
+        for (int i = 0; i < s.length(); i++)
+            if (Character.isDigit(s.charAt(i)) == false)
+                return false;
+
+        return true;
     }
 
     public static void seeAllRooms() {
