@@ -8,6 +8,7 @@ import model.RoomType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class AdminMenu {
     static AdminResource adminResource = AdminResource.getInstance();
@@ -64,7 +65,9 @@ public class AdminMenu {
     private static void addARoom() {
         final Scanner input = new Scanner(System.in);
 
+
         List<IRoom>  roomList = new ArrayList<>();
+        List<String> listOfNumbers = new ArrayList<>();
         while(true) {
 
             System.out.println("Enter Room Number: ");
@@ -74,11 +77,17 @@ public class AdminMenu {
                 System.out.println();
                 return;
             }
+            if (!isUnique(roomNumber) || listOfNumbers.contains(roomNumber)) {
+                System.out.println("Invalid number, it is already associated with a room!");
+                System.out.println();
+                return;
+            }
             System.out.println("Enter Price per Night: ");
             Double price = Double.parseDouble(input.nextLine());
             System.out.println("Enter Room Type: 1 for Single, 2 for Double");
             RoomType type = Integer.parseInt(input.nextLine()) == 1 ? RoomType.SINGLE : RoomType.DOUBLE;
             Room room = new Room(roomNumber, price, type);
+            listOfNumbers.add(roomNumber);
             roomList.add(room);
 
             System.out.println("Would you like to add another room? y/n");
@@ -107,6 +116,15 @@ public class AdminMenu {
                 return false;
 
         return true;
+    }
+    static boolean isUnique(String num) {
+
+        List<IRoom> rooms = adminResource.getAllRooms()
+                .stream()
+                .filter(room -> room.getRoomNumber().equals(num))
+                .collect(Collectors.toList());
+
+        return rooms.isEmpty();
     }
 
     public static void seeAllRooms() {
