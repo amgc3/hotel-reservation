@@ -68,6 +68,8 @@ public class AdminMenu {
 
         List<IRoom>  roomList = new ArrayList<>();
         List<String> listOfNumbers = new ArrayList<>();
+        Double price;
+
         while(true) {
 
             System.out.println("Enter Room Number: ");
@@ -82,10 +84,29 @@ public class AdminMenu {
                 System.out.println();
                 return;
             }
-            System.out.println("Enter Price per Night: ");
-            Double price = Double.parseDouble(input.nextLine());
+            try {
+                System.out.println("Enter Price per Night: ");
+                price = Double.parseDouble(input.nextLine());
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input for price entered");
+                System.out.println();
+                return;
+            } catch (NullPointerException e) {
+                System.out.println("No value for price entered ");
+                System.out.println();
+                return;
+            }
+
             System.out.println("Enter Room Type: 1 for Single, 2 for Double");
-            RoomType type = Integer.parseInt(input.nextLine()) == 1 ? RoomType.SINGLE : RoomType.DOUBLE;
+            RoomType type;
+            try {
+                type = Integer.parseInt(input.nextLine()) == 1 ? RoomType.SINGLE : RoomType.DOUBLE;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number entered for room type");
+                System.out.println();
+                return;
+            }
             Room room = new Room(roomNumber, price, type);
             listOfNumbers.add(roomNumber);
             roomList.add(room);
