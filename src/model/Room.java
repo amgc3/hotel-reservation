@@ -22,8 +22,12 @@ public class Room implements  IRoom {
         return price;
     }
 
-    public void setRoomPrice(Double price) {
+    public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
 
     @Override

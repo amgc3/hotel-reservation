@@ -11,7 +11,7 @@ public class ReservationService {
 
     private final static ReservationService instance = new ReservationService();
     private Set<IRoom> hotelRooms;
-    private Map<String, List<Reservation>> reservations;
+    private Map<String, Set<Reservation>> reservations;
 
     private ReservationService() {
         hotelRooms = new HashSet<>();
@@ -40,9 +40,9 @@ public class ReservationService {
 
     public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
         Reservation reservation = new Reservation(customer, room, checkInDate, checkOutDate);
-        List<Reservation> customerReservations = reservations.get(customer.getEmail());
+        Set<Reservation> customerReservations = reservations.get(customer.getEmail());
         if (customerReservations == null) {
-            customerReservations = new ArrayList<>();
+            customerReservations = new HashSet<>();
         }
         customerReservations.add(reservation);
         reservations.put(customer.getEmail(), customerReservations);
@@ -53,8 +53,8 @@ public class ReservationService {
     public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate) {
 
         // get all reservations
-        List<Reservation> allReservations = new ArrayList<>();
-        for (List<Reservation> customerReservations : reservations.values() ) {
+        Set<Reservation> allReservations = new HashSet<>();
+        for (Set<Reservation> customerReservations : reservations.values() ) {
             allReservations.addAll(customerReservations);
         }
 
@@ -68,6 +68,7 @@ public class ReservationService {
             Set<IRoom> collect1 = allReservations
                     .stream()
                     .filter(res -> !areDatesOverlapping(res.getCheckInDate(), res.getCheckOutDate(), checkInDate, checkOutDate))
+                    .filter(res -> !areDatesEqual(res.getCheckInDate(), res.getCheckOutDate(), checkInDate, checkOutDate))
                     .map(reservation -> reservation.getRoom())
                     .collect(Collectors.toSet());
 
@@ -84,7 +85,7 @@ public class ReservationService {
                     .collect(Collectors.toSet());
 
             collect1.addAll(roomsWithoutReservation);
-            return collect1; // I don't think I need this now, probably can return collect1
+            return collect1;
         }
     }
 
@@ -94,18 +95,23 @@ public class ReservationService {
                 || resCheckOut.after(checkInDate) && resCheckOut.before(checkOutDate);
     }
 
+    public static boolean areDatesEqual(Date resCheckIn, Date resCheckOut, Date checkInDate, Date checkOutDate) {
+        return resCheckIn.equals(checkInDate) && resCheckOut.equals(checkOutDate);
+    }
+
     public Collection<Reservation> getCustomersReservation(Customer customer) {
         return reservations.get(customer.getEmail());
     }
 
     public void printAllReservation() {
         List<Reservation> allReservations = new ArrayList<>();
-        for (List<Reservation> customerReservations : reservations.values() ) {
+        for (Set<Reservation> customerReservations : reservations.values() ) {
             allReservations.addAll(customerReservations);
         }
 
         if (allReservations.isEmpty()) {
             System.out.println("There are no reservations");
+            System.out.println();
         } else {
             allReservations.forEach(reservation -> System.out.println(reservation));
         }
