@@ -147,6 +147,7 @@ public class MainMenu {
         System.out.println("Please select a room number or 0 to exit");
         String roomNumber = input.nextLine();
         if (roomNumber.equals("0")) return;
+
         IRoom room;
         try {
             room = hotelResource.getRoom(roomNumber);
@@ -154,10 +155,16 @@ public class MainMenu {
             System.out.println("You selected an invalid room number");
             return;
         }
+        if (roomsFound.contains(room)) {
+            hotelResource.bookARoom(email, room, date1, date2);
+            System.out.println("Room " + roomNumber + " has been booked");
+            System.out.println();
+        } else {
+            System.out.println("This room is not available at this time");
+            System.out.println();
+        }
 
-        hotelResource.bookARoom(email, room, date1, date2);
-        System.out.println("Room " + roomNumber + " has been booked");
-        System.out.println();
+
 
     }
 
