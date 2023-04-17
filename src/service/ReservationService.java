@@ -69,6 +69,7 @@ public class ReservationService {
                     .stream()
                     .filter(res -> !areDatesOverlapping(res.getCheckInDate(), res.getCheckOutDate(), checkInDate, checkOutDate))
                     .filter(res -> !areDatesEqual(res.getCheckInDate(), res.getCheckOutDate(), checkInDate, checkOutDate))
+                    .filter(res -> !areDatesIncluded(res.getCheckInDate(), res.getCheckOutDate(), checkInDate, checkOutDate))
                     .map(reservation -> reservation.getRoom())
                     .collect(Collectors.toSet());
 
@@ -91,13 +92,19 @@ public class ReservationService {
 
     // assumption: a customer can check out of a room and another can check in the same day
     public static boolean areDatesOverlapping(Date resCheckIn, Date resCheckOut, Date checkInDate, Date checkOutDate) {
-        return resCheckIn.after(checkInDate) && resCheckIn.before(checkOutDate)
-                || resCheckOut.after(checkInDate) && resCheckOut.before(checkOutDate);
+        return (resCheckIn.after(checkInDate) && resCheckIn.before(checkOutDate))
+                || (resCheckOut.after(checkInDate) && resCheckOut.before(checkOutDate));
     }
 
     public static boolean areDatesEqual(Date resCheckIn, Date resCheckOut, Date checkInDate, Date checkOutDate) {
         return resCheckIn.equals(checkInDate) && resCheckOut.equals(checkOutDate);
     }
+
+    public static boolean areDatesIncluded(Date resCheckIn, Date resCheckOut, Date checkInDate, Date checkOutDate) {
+        return resCheckIn.before(checkInDate) && resCheckOut.after(checkOutDate);
+    }
+
+
 
     public Collection<Reservation> getCustomersReservation(Customer customer) {
         return reservations.get(customer.getEmail());

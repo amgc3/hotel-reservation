@@ -103,7 +103,7 @@ public class MainMenu {
 
         Date date1;
         while (true) {
-            String begin = input.nextLine();
+            String begin = input.nextLine().strip();
             try {
                 date1 = new SimpleDateFormat("dd-MM-yyyy").parse(begin);
                 break;
@@ -117,7 +117,7 @@ public class MainMenu {
         Date date2;
 
         while (true) {
-            String end = input.nextLine();
+            String end = input.nextLine().strip();
             try {
                 date2 = new SimpleDateFormat("dd-MM-yyyy").parse(end);
                 break;
@@ -133,6 +133,14 @@ public class MainMenu {
         Collection<IRoom> roomsFound = hotelResource.findARoom(date1, date2);
         // search for alternatives
         if (roomsFound.isEmpty()) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date1);
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+            date1 = calendar.getTime();
+            calendar.setTime(date2);
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+            date2 = calendar.getTime();
+
             roomsFound = getRoomsWithAlternativeDates(date1, date2);
 
         }
@@ -164,19 +172,10 @@ public class MainMenu {
             System.out.println();
         }
 
-
-
     }
 
-    private static Collection<IRoom> getRoomsWithAlternativeDates(Date date1, Date date2) {
+    private static Collection<IRoom> getRoomsWithAlternativeDates(Date newCheckIn, Date newCheckOut) {
         Collection<IRoom> roomsFound;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date1);
-        calendar.add(Calendar.DAY_OF_MONTH, 7);
-        Date newCheckIn = calendar.getTime();
-        calendar.setTime(date2);
-        calendar.add(Calendar.DAY_OF_MONTH, 7);
-        Date newCheckOut = calendar.getTime();
         roomsFound = hotelResource.findARoom(newCheckIn, newCheckOut);
         System.out.println("There were no rooms available for your dates");
         System.out.println("We have searched for alternative check-in on " + newCheckIn + " and check-out on " + newCheckOut );
